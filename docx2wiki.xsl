@@ -6,8 +6,13 @@
     <xsl:output method="text" />
     <xsl:strip-space elements="*"/>
     
-    <!-- Document that contains the numbering styles for paragraphs -->
-    <xsl:variable name="numberingStyles" select="document('numbering.xml')"/>
+    <xsl:param name="numberingFile" select="'numbering.xml'"></xsl:param>
+        
+    <!-- 
+        Document that contains the numbering styles for paragraphs.
+        Normally this is 'numbering.xml' contained in the docx archive file.
+    -->
+    <xsl:variable name="numberingStyles" select="document($numberingFile)"/>
     
     <!-- Add line break after every paragraph -->
     <!-- TODO: Add additional line break if preceding p is a list -->
