@@ -7,12 +7,19 @@
     <xsl:strip-space elements="*"/>
     
     <xsl:param name="numberingFile" select="'numbering.xml'"></xsl:param>
+    <xsl:param name="styleFormattingFile" select="'styleformatting.xml'"></xsl:param>
         
     <!-- 
         Document that contains the numbering styles for paragraphs.
         Normally this is 'numbering.xml' contained in the docx archive file.
     -->
     <xsl:variable name="numberingStyles" select="document($numberingFile)"/>
+    
+    <!-- 
+        Document that contains the associations between style names and other formatting
+        Used for headings, blockquotes etc
+    -->
+    <xsl:variable name="styleFormatting" select="document($styleFormattingFile)/formatting"/>
     
     <!-- Add line break after every paragraph -->
     <!-- TODO: Add additional line break if preceding p is a list -->
@@ -32,7 +39,6 @@
         <xsl:text xml:space="preserve"> </xsl:text>
     </xsl:template>
     
-    
     <!-- Lists -->
     <xsl:template match="w:numPr" mode="paragraph-prefix">
         <xsl:variable name="ilvl" select="w:ilvl/@w:val"></xsl:variable>
@@ -50,6 +56,16 @@
         </xsl:if>
     </xsl:template>
     
+    <!-- Paragraph prefixes based on style -->
+    <xsl:template match="w:pStyle" mode="paragraph-prefix">
+        <xsl:variable name="stylename" select="@w:val"/>
+        <xsl:value-of select="$styleFormatting/style[@name=$stylename]/prefix"/>
+    </xsl:template>
+    
+    <xsl:template match="w:pStyle" mode="paragraph-suffix">
+        <xsl:variable name="stylename" select="@w:val"/>
+        <xsl:value-of select="$styleFormatting/style[@name=$stylename]/suffix"/>
+    </xsl:template>
     
     <!-- Bold text inline -->
     <xsl:template match="w:b" mode="inline-prefix">**</xsl:template>

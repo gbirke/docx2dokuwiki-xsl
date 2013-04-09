@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains the formatting for certain styles -->
+<formatting>
+    <style name="style1">
+        <prefix>&#10;======</prefix>
+        <suffix>======</suffix>
+    </style>
+    <style name="style2">
+        <prefix>&#10;=====</prefix>
+        <suffix>=====</suffix>
+    </style>
+    <style name="style3">
+        <prefix>&#10;====</prefix>
+        <suffix>====</suffix>
+    </style>
+</formatting>
