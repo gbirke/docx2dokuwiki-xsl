@@ -80,6 +80,20 @@
         <xsl:text xml:space="preserve"> \\ </xsl:text>
     </xsl:template>
     
+    <!-- Table Handling -->
+    <xsl:template match="w:tbl">
+        <xsl:apply-templates select="w:tr"/>
+        <xsl:text>&#10;</xsl:text>
+    </xsl:template>
+    
+    <!-- Table column -->
+    <xsl:template match="w:tc">
+        <xsl:if test="count(preceding-sibling::w:tc) = 0">
+            <xsl:text>&#10;|</xsl:text>
+        </xsl:if>
+        <xsl:value-of select="w:p"/>
+        <xsl:text>|</xsl:text>
+    </xsl:template>
     
     <!-- Check for a matching numbering style and return a prefix if numbering style is decimal or bullet -->
     <xsl:template name="getListprefix">
