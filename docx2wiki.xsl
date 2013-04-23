@@ -33,7 +33,7 @@
     <!-- Format region -->
     <xsl:template match="w:r">
         <xsl:apply-templates select="w:rPr" mode="inline-prefix" />
-        <xsl:apply-templates select="w:t|w:br"/>
+        <xsl:apply-templates select="w:t|w:br|w:sym"/>
         <xsl:apply-templates select="w:rPr" mode="inline-suffix" />
     </xsl:template>
     
@@ -117,5 +117,9 @@
         <xsl:value-of select="substring('                    ', 1, $numSpaces)" xml:space="preserve" />
     </xsl:template>
     
+    <!-- Symbols -->
+    <xsl:template match="w:sym[@w:font='Wingdings' and @w:char='F0E0']">
+        <xsl:text> \\ =></xsl:text>
+    </xsl:template>
 
 </xsl:stylesheet>
