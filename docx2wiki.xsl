@@ -119,7 +119,7 @@
     
     <!-- Symbols -->
     <xsl:template match="w:sym[@w:font='Wingdings' and @w:char='F0E0']">
-        <xsl:text> \\ =></xsl:text>
+        <xsl:text> =></xsl:text>
     </xsl:template>
 
 </xsl:stylesheet>
