@@ -4,7 +4,7 @@
     version="1.0">
 
     <xsl:output method="text" />
-    <xsl:strip-space elements="*"/>
+    
     
     <xsl:param name="numberingFile" select="'numbering.xml'"></xsl:param>
     <xsl:param name="styleFormattingFile" select="'styleformatting.xml'"></xsl:param>
@@ -32,16 +32,14 @@
     
     <!-- Format region -->
     <xsl:template match="w:r">
-        <xsl:text xml:space="preserve"> </xsl:text>
         <xsl:apply-templates select="w:rPr" mode="inline-prefix" />
         <xsl:apply-templates select="w:t|w:br"/>
         <xsl:apply-templates select="w:rPr" mode="inline-suffix" />
-        <xsl:text xml:space="preserve"> </xsl:text>
     </xsl:template>
     
     <!-- Lists -->
     <xsl:template match="w:numPr" mode="paragraph-prefix">
-        <xsl:variable name="ilvl" select="w:ilvl/@w:val"></xsl:variable>
+        <xsl:variable name="ilvl" select="number(w:ilvl/@w:val)"></xsl:variable>
         <xsl:variable name="prefix">
             <xsl:call-template name="getListprefix">
                 <xsl:with-param name="numId" select="w:numId/@w:val"/>
@@ -116,7 +114,7 @@
     
     <xsl:template name="getSpaces">
         <xsl:param name="numSpaces" select="1"></xsl:param>
-        <xsl:value-of select="substring('                    ', 0, $numSpaces)" xml:space="preserve" />
+        <xsl:value-of select="substring('                    ', 1, $numSpaces)" xml:space="preserve" />
     </xsl:template>
     
 
