@@ -25,7 +25,7 @@
     <!-- TODO: Add additional line break if preceding p is a list -->
     <xsl:template match="w:p">
         <xsl:apply-templates select="w:pPr" mode="paragraph-prefix" />
-        <xsl:apply-templates select="w:r"/>
+        <xsl:apply-templates select="w:r|w:hyperlink"/>
         <xsl:apply-templates select="w:pPr" mode="paragraph-suffix" />
         <xsl:text xml:space="preserve">&#10;</xsl:text>
     </xsl:template>
