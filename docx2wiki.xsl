@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
     xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    xmlns:r2="http://schemas.openxmlformats.org/package/2006/relationships"
     version="1.0">
 
     <xsl:output method="text" />
     
-    
     <xsl:param name="numberingFile" select="'numbering.xml'"></xsl:param>
+    <xsl:param name="relationsFile" select="'document.xml.rels'"></xsl:param>
     <xsl:param name="styleFormattingFile" select="'styleformatting.xml'"></xsl:param>
-        
+    
+    <xsl:template match="/">
+        <xsl:variable name="t" select="$relations/r2:Relationship[1]"/>
+        <xsl:message>
+            <xsl:value-of select="$numberingFile"/>
+        </xsl:message>
+        <xsl:apply-templates/>
+    </xsl:template>
+    
     <!-- 
         Document that contains the numbering styles for paragraphs.
-        Normally this is 'numbering.xml' contained in the docx archive file.
+        Normally this is 'word/numbering.xml' contained in the docx archive file.
     -->
     <xsl:variable name="numberingStyles" select="document($numberingFile)"/>
+    
+    <!-- 
+        Document that contains the references (hyperlinks and images).
+        Normally this is '_refs/document.xml.rels' contained in the docx archive file.
+    -->
+    <xsl:variable name="relations" select="document($relationsFile)/r2:Relationships"/>
     
     <!-- 
         Document that contains the associations between style names and other formatting
@@ -76,6 +92,27 @@
     <!-- Add line breaks -->
     <xsl:template match="w:br">
         <xsl:text xml:space="preserve"> \\ </xsl:text>
+    </xsl:template>
+    
+    <!-- Hyperlink targets -->
+    <xsl:template match="w:hyperlink">
+        <xsl:variable name="refId" select="@r:id"/>
+        <xsl:message>
+            <xsl:text>redid=</xsl:text><xsl:value-of select="$refId"/>
+            <xsl:value-of select="$relations/r2:Relationship[0]/@Type"/>
+        </xsl:message>
+        <xsl:choose>
+            <xsl:when test="$relations/r2:Relationship[@Id=$refId]/@Type='http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink'">
+                <xsl:text>[[</xsl:text>
+                <xsl:value-of select="$relations/r2:Relationship[@Id=$refId]/@Target"/>
+                <xsl:text>|</xsl:text>
+                <xsl:apply-templates/>
+                <xsl:text>]]</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <!-- Table Handling -->
